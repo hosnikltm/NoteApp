@@ -1,4 +1,4 @@
-package com.example.noteapp;
+package com.aro.noteapp;
 
 import java.io.Serializable;
 

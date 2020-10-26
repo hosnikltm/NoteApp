@@ -1,4 +1,4 @@
-package com.example.noteapp;
+package com.aro.noteapp;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -9,7 +9,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
-import com.example.noteapp.databinding.ActivityMainBinding;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -17,7 +18,7 @@ import java.io.ObjectInputStream;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
-    ActivityMainBinding binding;
+    private FloatingActionButton addButton;
 
     private static final int REQUEST_CODE = 111;
 
@@ -28,21 +29,19 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = ActivityMainBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
-        binding.addButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this,CreateNote.class);
-                startActivityForResult(intent,REQUEST_CODE);
-            }
+        setContentView(R.layout.activity_main);
+        addButton = findViewById(R.id.addButton);
+        recyclerView = findViewById(R.id.recycler);
+        addButton.setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity.this,CreateNote.class);
+            startActivityForResult(intent,REQUEST_CODE);
         });
 
         gridLayoutManager = new GridLayoutManager(this,2);
         notes = new ArrayList<>();
         adapter = new MyAdapter(notes);
-        binding.recycler.setAdapter(adapter);
-        binding.recycler.setLayoutManager(gridLayoutManager);
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(gridLayoutManager);
 
     }
 
@@ -51,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_CODE && data != null){
             if (resultCode == RESULT_OK){
-                String nameFile = data.getStringExtra("read");
+                String nameFile = data.getStringExtra("read file");
                 try {
                     FileInputStream fileInputStream = new FileInputStream(nameFile);
                     ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
